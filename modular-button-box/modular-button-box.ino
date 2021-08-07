@@ -23,15 +23,15 @@ int wingSweepAxis = 0;
 // 9 total on F14 side pannel
 
 //F14 Buttons
-#define f14Button1 58
-#define f14Button2 59
-#define f14Button3 60
-#define f14Button4 61
-#define f14Button5 62
-#define f14Button6 63
-#define f14Button7 64
-#define f14Button8 65
-#define f14Button9 66
+#define f14Button1 1
+#define f14Button2 2
+#define f14Button3 3
+#define f14Button4 4
+#define f14Button5 14
+#define f14Button6 15
+#define f14Button7 16
+#define f14Button8 17
+#define f14Button9 18
 
 int lastF14Button1 = 0;
 int lastF14Button2 = 0;
@@ -106,8 +106,8 @@ int lastCenterButton28 = 0;
 int lastCenterButton29 = 0;
 int lastCenterButton30 = 0;
 
-Joystick_ Joystick(0x15, JOYSTICK_TYPE_JOYSTICK, 39, 0, true, true, true, true, false, false, false, false, false, false, false);
-const bool initAutoSendState = true;
+Joystick_ Joystick(0x15, JOYSTICK_TYPE_JOYSTICK, 39, 0, false, false, true, true, true, true, false, false, false, false, false);
+const bool initAutoSendState = false;
 const int smoothing = 1023;
 
 int setButtonState(int currentButtonState, int previousButtonState, int button){
@@ -167,19 +167,20 @@ void setup() {
   pinMode(centerButton28, INPUT_PULLUP);
   pinMode(centerButton29, INPUT_PULLUP);
   pinMode(centerButton30, INPUT_PULLUP);
-  Joystick.begin();
 
+  
+  Joystick.begin();
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   knob1Axis = analogRead(knob1);
   knob1Axis = map(knob1Axis, 0 , 1023, 0, smoothing);
-  Joystick.setXAxis(knob1Axis);
+  Joystick.setRyAxis(knob1Axis);
   
   knob2Axis = analogRead(knob2);
   knob2Axis = map(knob2Axis, 0 , 1023, 0, smoothing);
-  Joystick.setYAxis(knob2Axis);
+  Joystick.setRzAxis(knob2Axis);
   
   flapsAxis = analogRead(flaps);
   flapsAxis = map(flapsAxis,  0, 1023, 0, smoothing);
@@ -309,6 +310,6 @@ void loop() {
   
   int currentCenterButton30 = !digitalRead(centerButton30);
   lastCenterButton30 = setButtonState(currentCenterButton30, lastCenterButton30, 29);
-  
+  Joystick.sendState();
   delay(20);
 }
